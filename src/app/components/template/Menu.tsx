@@ -1,11 +1,11 @@
-import { DollarSign , ShoppingBag, ShoppingCart, FileBox  } from "lucide-react";
-import { MenuItem } from './MenuItem'
+import { DollarSign, ShoppingBag, ShoppingCart, FileBox } from "lucide-react";
+import { MenuItem } from './MenuItem';
 
 export default function Menu() {
   return (
     <div>
-      <aside className="w-60 border-r h-screen bg-gray-700">
-        <nav className="flex flex-col gap-1 py-7">
+      <aside className="w-20 sm:w-60 border-r h-screen bg-gray-700">
+        <nav className="flex flex-col items-center sm:items-start gap-1 py-7">
           <MenuItem icone={DollarSign} texto="Produtos à venda" url="/" />
           <MenuItem icone={ShoppingBag} texto="Minhas Compras" url="/minhasCompras" />
           <MenuItem icone={ShoppingCart} texto="Meu Carrinho" url="/meuCarrinho" />
@@ -13,5 +13,5 @@ export default function Menu() {
         </nav>
       </aside>
     </div>
-  )
+  );
 }
