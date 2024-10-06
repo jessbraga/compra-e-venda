@@ -1,5 +1,5 @@
 import { Produto } from '@/core/model/Produto'
-import LinhaUsuario from './LinhaProduto'
+import ProductCard from './ProductCard'
 import { ProdutoCarrinho } from '@/core/model/ProdutoCarrinho'
 
 export interface ProductListProps {
@@ -9,9 +9,9 @@ export interface ProductListProps {
 
 export default function ProductList({ products, onClick } : ProductListProps) {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {products.map((product: Produto) => {
-        return <LinhaUsuario key={product.codigo_produto} produto={product} /** onClick={props.onClick} */ />
+        return <ProductCard key={product.codigo_produto} product={product} /** onClick={props.onClick} */ />
       })}
     </div>
   )

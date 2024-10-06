@@ -8,7 +8,7 @@ export interface InnerPageProps {
 
 export default function InnerPage({ children, className } : InnerPageProps) {
   return (
-    <div className="flex">
+    <div className="flex bg-gray-100">
       <Menu/>
       <main className={`flex-1 p-7 ${className ?? ''}`}>
         {children}
