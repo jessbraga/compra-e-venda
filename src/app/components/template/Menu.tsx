@@ -3,15 +3,15 @@ import { MenuItem } from './MenuItem'
 
 export default function Menu() {
   return (
-        <div>
-        <aside className="w-50 border-r h-screen bg-gray-700">
-            <nav className="flex flex-col gap-1 py-7">
-                <MenuItem icone={DollarSign} texto="Produtos à venda" url="/" />
-                <MenuItem icone={ShoppingBag} texto="Minhas Compras" url="/minhasCompras" />
-                <MenuItem icone={ShoppingCart} texto="Meu Carrinho" url="/meuCarrinho" />
-                <MenuItem icone={FileBox} texto="Meus Anúncios" url="/meusAnuncios" />
-            </nav>
-        </aside>
-        </div>
-    )
+    <div>
+      <aside className="w-60 border-r h-screen bg-gray-700">
+        <nav className="flex flex-col gap-1 py-7">
+          <MenuItem icone={DollarSign} texto="Produtos à venda" url="/" />
+          <MenuItem icone={ShoppingBag} texto="Minhas Compras" url="/minhasCompras" />
+          <MenuItem icone={ShoppingCart} texto="Meu Carrinho" url="/meuCarrinho" />
+          <MenuItem icone={FileBox} texto="Meus Anúncios" url="/meusAnuncios" />
+        </nav>
+      </aside>
+    </div>
+  )
 }
