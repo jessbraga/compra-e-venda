@@ -59,7 +59,6 @@ export default function ProductCard({ product, onClick } : ProductCardProps) {
       <div className="flex w-full flex-col gap-2 p-4 mb-2">
         <h5 className="font-black text-center">{product.nome}</h5>
         <p className="text-gray-500 text-center">R$ {product.valor}</p>
-        {/* <p className="text-gray-500 max-h-36 overflow-auto text-start break-words">{product.descricao}</p> */}
         <div className="flex flex-row gap-2 justify-end">
           <button
             className="flex items-center justify-center w-full gap-2 py-2 border border-black rounded-md hover:bg-black hover:text-white"
@@ -79,7 +78,39 @@ export default function ProductCard({ product, onClick } : ProductCardProps) {
         isOpen={modalOpen}
         onClose={onHandleModal}
         content={
-          <p>teste</p>
+          <>
+            <div className="pt-4 flex">
+              <Image
+                src="https://fastly.picsum.photos/id/875/150/150.jpg?hmac=BVUVtr50E6SkjYSs14Bo6bSHbG4SzeKtkDkiE6MMnSA"
+                width={80}
+                height={80}
+                className="hidden lg:flex md:w-96 md:h-96 mr-4"
+                alt={product.nome}
+              />
+              <div className="max-h-96 w-auto text-pretty overflow-y-auto">
+                <div className="flex flex-col mb-2">
+                  <h3 className="text-xl font-medium">{product.nome}</h3>
+                  <p className="text-md text-gray-500">R$ {product.valor}</p>
+                </div>
+                <div className="flex flex-row mb-2 space-x-1">
+                  <span className="text-semibold">Código:</span>
+                  <p className="text-gray-700">{product.codigo_produto}</p>
+                </div>
+                <div className="flex flex-row mb-2 space-x-1">
+                  <span className="text-semibold">Estoque:</span>
+                  <p className="text-gray-700">{product.quantidade} un.</p>
+                </div>
+                <div className="flex flex-row mb-2 space-x-1">
+                  <span className="text-semibold">E-mail do Vendedor:</span>
+                  <p className="text-gray-700">{product.email_vendedor}</p>
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <span>Descrição:</span>
+                  <p className="text-gray-700 break-words">{product.descricao}</p>
+                </div>
+              </div>
+            </div>
+          </>
         }
       />
     </div>
