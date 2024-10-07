@@ -57,7 +57,7 @@ export default function ProductCard({ product, onClick } : ProductCardProps) {
         alt="Avatar"
       />
       <div className="flex w-full flex-col gap-2 p-4 mb-2">
-        <h5 className="font-black text-center">{product.nome}</h5>
+        <h5 className="text-lg font-semibold text-center">{product.nome}</h5>
         <p className="text-gray-500 text-center">R$ {product.valor}</p>
         <div className="flex flex-row gap-2 justify-end">
           <button
