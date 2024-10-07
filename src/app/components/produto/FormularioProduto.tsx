@@ -30,9 +30,9 @@ export default function FormularioProduto(props: FormularioProdutoProps) {
       </div>
       <div className="flex justify-between">
         <div className="flex gap-5">
-          <button className="bg-zinc-500 px-4 py-2 rounded-md" onClick={props.salvar}>Salvar</button>
-          <button className="bg-zinc-500 px-4 py-2 rounded-md" onClick={props.cancelar}>Cancelar</button>
-          <button className="bg-zinc-500 px-4 py-2 rounded-md" onClick={props.excluir}>Excluir</button>
+          <button className="bg-gray-300 mt-4 px-4 py-2 rounded-md" onClick={props.salvar}>Salvar</button>
+          <button className="bg-gray-300 mt-4 px-4 py-2 rounded-md" onClick={props.cancelar}>Cancelar</button>
+          <button className="bg-gray-300 mt-4 px-4 py-2 rounded-md" onClick={props.excluir}>Excluir</button>
         </div>
       </div>
     </div>

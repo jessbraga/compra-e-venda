@@ -1,6 +1,6 @@
 'use client'
 
-//import { UserRound } from 'lucide-react';
+import { PackagePlus } from 'lucide-react';
 import FormularioProduto from '@/app/components/produto/FormularioProduto'
 import ProductList from '@/app/components/produto/ProductList'
 import InnerPage from '@/app/components/template/InnerPage'
@@ -12,7 +12,7 @@ export default function Page() {
 
   return (
     <InnerPage className="flex flex-col gap-10">
-      <Title main="Meus Anúncios" secondary="" />
+      <Title main="Meus Anúncios" secondary=""/>
       {produto ? (
         <FormularioProduto
           produto={produto}
@@ -25,10 +25,10 @@ export default function Page() {
         <>
           <div className="flex justify-end">
             <button
-              className="flex items-center gap-2 px-4 py-2 rounded-md" style={{backgroundColor: "#ffece9"}}
+              className="flex items-center gap-2 px-4 py-2 border border-black rounded-md hover:bg-black hover:text-white" 
               onClick={() => alterarProduto({})}
             >
-              +
+              <PackagePlus/>
               <span>Cadastrar Produto</span>
             </button>
           </div>
