@@ -10,36 +10,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ProdutoVendido {
-  nome String
-  codigo_produto Int
-  descricao String
-  valor Float    @default(0.00)
-  quantidade Int
-  email_vendedor String
-  email_cliente String
-  codigo_venda Int @id @unique
-  status String
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  products  Product[]
+  cartId    Int
+  userCart  Cart      @relation(fields: [cartId], references: [id])
+  isSeller  Boolean   @default(false)
+  createdAt DateTime  @default(now())
 }
 
-model ProdutoAVenda {
-  nome String
-  codigo_produto Int @id @unique
-  descricao String
-  valor Float    @default(0.00)
-  quantidade Int
-  email_vendedor String
-  codigo_venda Int
+model Product {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  stock       Int
+  userId      Int
+  seller      User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  cartItems   CartItem[]
 }
 
-model ProdutoNoCarrinho {
-  codigo_carrinho Int @id @unique
-  nome String
-  codigo_produto Int
-  descricao String
-  valor Float    @default(0.00)
-  quantidade Int
-  email_cliente String
-  email_vendedor String
-  codigo_venda Int
+model Cart {
+  id    Int        @id @default(autoincrement())
+  items CartItem[]
+  user  User[]
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cartId    Int
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+
+  @@unique([cartId, productId])
 }
