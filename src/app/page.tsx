@@ -3,16 +3,18 @@
 import ProductList from './components/produto/ProductList'
 import InnerPage from './components/template/InnerPage'
 import Title from './components/template/Title'
-import useProdutos from '@/app/data/hooks/useProdutos'
+import { useFetch } from './hooks/fetch'
 
 export default function Home() {
-
-  const { produto, produtos, salvar, excluir, alterarProduto } = useProdutos()
+  const { 
+    data,
+    isLoading
+  } = useFetch<Record<string, any>>("/products");
 
   return (
     <InnerPage className="flex flex-col gap-10">
       <Title main="Produtos" secondary="Seja bem-vindo(a)!" />
-      <ProductList products={produtos} onClick={alterarProduto} />
+      {isLoading ? null : <ProductList products={data?.products}/>}
     </InnerPage>
   );
 }

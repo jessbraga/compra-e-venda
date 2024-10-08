@@ -1,46 +1,17 @@
 import { useState } from 'react';
-import { ProdutoCarrinho } from '@/core/model/ProdutoCarrinho'
-import { InputNumber } from 'antd';
 import Image from 'next/image'
-import { Produto } from "@/core/model/Produto";
-import InputTexto from "../shared/InputTexto";
-import useProdutosCarrinho from '@/app/data/hooks/useProdutosCarrinho';
-import { PrismaClient } from '@prisma/client/extension';
-import Backend from '@/backend/produtoCarrinho';
 import { ShoppingCart } from 'lucide-react';
 import Modal from '../shared/Modal';
+import { Product } from '@/core/model/Product';
 
 export interface ProductCardProps {
-  product: Produto
-  onClick?: (product: Produto) => void
+  product: Product
+  onClick?: (product: Product) => void
+  toBuy?: boolean
 }
 
-export default function ProductCard({ product, onClick } : ProductCardProps) {
-  const [modalOpen, setModalOpen] = useState(false);
-
-  let produtosCarrinho = []
-
-  const produtoCarrinho = {
-    codigo_carrinho: 435,
-    nome: product.nome,
-    codigo_produto: product.codigo_produto,
-    descricao: product.descricao,
-    valor: product.valor,
-    quantidade: product.quantidade,
-    email_cliente: "manoel.cabral@gmail.com",
-    email_vendedor: product.email_vendedor,
-    codigo_venda: product.codigo_venda
-  };
-
-  async function salvarCarrinho() {
-    if (!produtoCarrinho) return
-    const produtosCarrinhoReturn = await Backend.produtosCarrinho.obterCarrinho()
-    produtosCarrinho = produtosCarrinhoReturn;
-    await Backend.produtosCarrinho.salvarCarrinho(produtoCarrinho)
-    produtosCarrinho.push(produtoCarrinho);
-    console.log(produtosCarrinho)
-    //setProdutosCarrinho(produtosCarrinho)
-  }
+export default function ProductCard({ product, onClick, toBuy } : ProductCardProps) {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const onHandleModal = () => setModalOpen(!modalOpen)
 
@@ -57,8 +28,8 @@ export default function ProductCard({ product, onClick } : ProductCardProps) {
         alt="Avatar"
       />
       <div className="flex w-full flex-col gap-2 p-4 mb-2">
-        <h5 className="text-lg font-semibold text-center">{product.nome}</h5>
-        <p className="text-gray-500 text-center">R$ {product.valor}</p>
+        <h5 className="text-lg font-semibold text-center">{product.name}</h5>
+        <p className="text-gray-500 text-center">R$ {product.price}</p>
         <div className="flex flex-row gap-2 justify-end">
           <button
             className="flex items-center justify-center w-full gap-2 py-2 border border-black rounded-md hover:bg-black hover:text-white"
@@ -66,11 +37,13 @@ export default function ProductCard({ product, onClick } : ProductCardProps) {
           >
             Detalhes
           </button>
-          <button
-            className="flex items-center justify-center p-3 rounded-full border border-black hover:bg-black hover:text-white"
-          >
-            <ShoppingCart size={18}/>
-          </button>
+          {toBuy ??
+            <button
+              className="flex items-center justify-center p-3 rounded-full border border-black hover:bg-black hover:text-white"
+            >
+              <ShoppingCart size={18}/>
+            </button>
+          }
         </div>
       </div>
       <Modal
@@ -85,28 +58,28 @@ export default function ProductCard({ product, onClick } : ProductCardProps) {
                 width={80}
                 height={80}
                 className="hidden lg:flex md:w-96 md:h-96 mr-4"
-                alt={product.nome}
+                alt={product.name}
               />
               <div className="max-h-96 w-auto text-pretty overflow-y-auto">
                 <div className="flex flex-col mb-2">
-                  <h3 className="text-xl font-medium">{product.nome}</h3>
-                  <p className="text-md text-gray-500">R$ {product.valor}</p>
+                  <h3 className="text-xl font-medium">{product.name}</h3>
+                  <p className="text-md text-gray-500">R$ {product.price}</p>
                 </div>
                 <div className="flex flex-row mb-2 space-x-1">
                   <span className="text-semibold">Código:</span>
-                  <p className="text-gray-700">{product.codigo_produto}</p>
+                  <p className="text-gray-700">{product.id}</p>
                 </div>
                 <div className="flex flex-row mb-2 space-x-1">
                   <span className="text-semibold">Estoque:</span>
-                  <p className="text-gray-700">{product.quantidade} un.</p>
+                  <p className="text-gray-700">{product.stock} un.</p>
                 </div>
                 <div className="flex flex-row mb-2 space-x-1">
                   <span className="text-semibold">E-mail do Vendedor:</span>
-                  <p className="text-gray-700">{product.email_vendedor}</p>
+                  <p className="text-gray-700">{product.userEmail}</p>
                 </div>
                 <div className="flex flex-col space-y-1">
                   <span>Descrição:</span>
-                  <p className="text-gray-700 break-words">{product.descricao}</p>
+                  <p className="text-gray-700 break-words">{product.description}</p>
                 </div>
               </div>
             </div>
