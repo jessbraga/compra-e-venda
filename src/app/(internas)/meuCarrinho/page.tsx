@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Trash } from 'lucide-react';
 import InnerPage from '@/app/components/template/InnerPage';
 import Title from '@/app/components/template/Title';
+import CartItem from '@/app/components/produto/CartItem';
+import CartSummary from '@/app/components/produto/CartSummary';
 
 interface Item {
   id: number;
@@ -12,7 +13,7 @@ interface Item {
   imgSrc: string;
   price: number;
   selected: boolean;
-  quantity: number; 
+  quantity: number;
 }
 
 export default function MyCart() {
@@ -66,54 +67,27 @@ export default function MyCart() {
     <InnerPage className="flex flex-col gap-10">
       <Title main="Meu carrinho" secondary="" />
       <div className="w-full bg-white shadow p-4 rounded-lg mb-4">
-        <button
-          onClick={toggleSelectAll}
-          className="text-blue-600 hover:text-blue-800 transition-colors mb-2"
-        >
-          {cart.every((item) => item.selected) ? 'Desmarcar todos' : 'Selecionar todos'}
-        </button>
-
         {cart.map((item) => (
-          <div key={item.id} className="flex items-center justify-between py-2 border-b">
-            <div className="flex items-center space-x-4">
-              <input
-                type="checkbox"
-                checked={item.selected}
-                onChange={() => toggleSelectItem(item.id)}
-              />
-              <img src={item.imgSrc} alt={item.name} className="w-16 h-16 object-cover rounded" />
-              <div>
-                <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-sm text-gray-500">Status: {item.status}</p>
-                <div className="flex items-center space-x-2 mt-1">
-                  <button onClick={() => updateQuantity(item.id, -1)} className="bg-gray-200 p-1 rounded-md " aria-label="Decrease quantity">-</button>
-                  <span>{item.quantity}</span>
-                  <button onClick={() => updateQuantity(item.id, 1)} className="bg-gray-200 p-1 rounded-md" aria-label="Increase quantity">+</button>
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => removeItem(item.id)}
-              className="text-red-600 hover:text-red-800 transition-colors"
-              aria-label="Remove item"
-            >
-              <Trash className="w-5 h-5" />
-            </button>
-          </div>
+          <CartItem
+            key={item.id}
+            id={item.id}
+            name={item.name}
+            status={item.status}
+            imgSrc={item.imgSrc}
+            price={item.price}
+            selected={item.selected}
+            quantity={item.quantity}
+            onToggleSelect={toggleSelectItem}
+            onRemove={removeItem}
+            onUpdateQuantity={updateQuantity}
+          />
         ))}
-
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <div className="flex justify-between text-lg font-semibold">
-            <span>Total estimado</span>
-            <span>R${totalSelected.toFixed(2)}</span>
-          </div>
-          <button
-            className="w-full mt-4 border border-black rounded-md hover:bg-black hover:text-white transition-colors"
-            disabled={cart.every((item) => !item.selected)}
-          >
-            Continue ({cart.filter((item) => item.selected).length})
-          </button>
-        </div>
+        <CartSummary
+          total={totalSelected}
+          selectedCount={cart.filter((item) => item.selected).length}
+          onToggleSelectAll={toggleSelectAll}
+          allSelected={cart.every((item) => item.selected)}
+        />
       </div>
     </InnerPage>
   );
