@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { ShoppingCart } from 'lucide-react';
 import Modal from '../shared/Modal';
 import { Product } from '@/core/model/Product';
+import ActionButton from '../shared/ActionButton';
 
 export interface ProductCardProps {
   product: Product
@@ -13,7 +14,7 @@ export interface ProductCardProps {
 export default function ProductCard({ product, onClick, toBuy } : ProductCardProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const onHandleModal = () => setModalOpen(!modalOpen)
+  const onHandleModal = () : void => setModalOpen(!modalOpen)
 
   return (
     <div
@@ -31,12 +32,11 @@ export default function ProductCard({ product, onClick, toBuy } : ProductCardPro
         <h5 className="text-lg font-semibold text-center">{product.name}</h5>
         <p className="text-gray-500 text-center">R$ {product.price}</p>
         <div className="flex flex-row gap-2 justify-end">
-          <button
-            className="flex items-center justify-center w-full gap-2 py-2 border border-black rounded-md hover:bg-black hover:text-white"
-            onClick={onHandleModal}
-          >
-            Detalhes
-          </button>
+          <ActionButton 
+            title="Detalhes" 
+            onClick={onHandleModal} 
+            extraStyle="flex items-center justify-center w-full gap-2"
+          />
           {toBuy ??
             <button
               className="flex items-center justify-center p-3 rounded-full border border-black hover:bg-black hover:text-white"

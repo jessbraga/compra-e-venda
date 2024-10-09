@@ -50,9 +50,11 @@ export default function Modal({ title, content, bottom, isOpen, onClose } : Moda
         <div className="p-4">
           {content}
         </div>
-        <div className="flex justify-end p-4 border-t">
-          {bottom}
-        </div>
+        {bottom ? (
+          <div className="flex justify-end p-4 border-t">
+            {bottom}
+          </div>
+        ) : null}
       </div>
     </div>
   )

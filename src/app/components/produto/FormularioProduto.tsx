@@ -1,40 +1,74 @@
-import { Produto } from "@/core/model/Produto";
+import { useState } from "react";
+import { Product } from "@/core/model/Product";
 import InputTexto from "../shared/InputTexto";
+import ActionButton from "../shared/ActionButton";
+import { usePush } from "@/app/hooks/push"
 
-export interface FormularioProdutoProps {
-  produto: Partial<Produto>
-  onChange: (produto: Partial<Produto>) => void
-  salvar: () => void
-  cancelar: () => void
-  excluir: () => void
-}
+export default function FormularioProduto() {
+  const [productInfo, setProductInfo] = useState<Partial<Product>>({})
 
-export default function FormularioProduto(props: FormularioProdutoProps) {
+  const { loadData, isLoading } = usePush("/products")
+
+  const handleNumberInput = (e: React.ChangeEvent<HTMLInputElement>, type: string, field: string) => {
+    let parsedNumber = 0;
+    const value = e.target.value
+
+    switch (type) {
+      case "int":
+        parsedNumber = parseInt(value)
+        break
+      case "float":
+        parsedNumber = parseFloat(value)
+        break
+    }
+
+    console.log(value)
+
+    if (!isNaN(parsedNumber)) {
+      console.log(parsedNumber)
+      setProductInfo({ ...productInfo, [field]: parsedNumber })
+    } else {
+      setProductInfo({ ...productInfo, [field]: '' });
+    }
+  };
+
+  const onCreateProduct = async () => {
+    const response: any = await loadData(productInfo)
+    if (!response.error) {
+      window.alert("Produto cadastrado com sucesso")
+      location.reload()
+    } else {
+      window.alert("Falha ao cadastrar produto")
+    }
+  }
+
   return (
-    <div>
-      <InputTexto label="Nome" type="text" value={props.produto.nome}
-        onChange={(e) => props.onChange?.({ ...props.produto, nome: e.target.value })} />
+    <>
       <div className="flex flex-col gap-5">
-        <InputTexto label="Código" type="text" value={props.produto.codigo_produto?.toString()}
-          onChange={(e) => props.onChange?.({ ...props.produto, codigo_produto: parseInt(e.target.value) })} />
-        <InputTexto label="Descrição" type="text" value={props.produto.descricao}
-          onChange={(e) => props.onChange?.({ ...props.produto, descricao: e.target.value })} />
-        <InputTexto label="Valor" type="text" value={props.produto.valor?.toString()}
-          onChange={(e) => props.onChange?.({ ...props.produto, valor: parseFloat(e.target.value) })} />
-        <InputTexto label="Quantidade" type="text" value={props.produto.quantidade?.toString()}
-          onChange={(e) => props.onChange?.({ ...props.produto, quantidade: parseInt(e.target.value) })} />
-        <InputTexto label="Email" type="text" value={props.produto.email_vendedor}
-          onChange={(e) => props.onChange?.({ ...props.produto, email_vendedor: e.target.value })} />
-        <InputTexto label="Código Venda" type="text" value={props.produto.codigo_venda?.toString()}
-          onChange={(e) => props.onChange?.({ ...props.produto, codigo_venda: parseInt(e.target.value) })} />
+        <InputTexto label="Nome" type="text" value={productInfo.name}
+          onChange={(e) => setProductInfo({ ...productInfo, name: e.target.value }) }/>
+        <InputTexto label="Descrição" type="text" value={productInfo.description}
+          onChange={(e) => setProductInfo({ ...productInfo, description: e.target.value }) }/>
+        <InputTexto label="Valor" type="text" value={productInfo.price}
+          onChange={(e) => handleNumberInput(e, "float", "price") }/>
+        <InputTexto label="Quantidade" type="text" value={productInfo.stock}
+          onChange={(e) => handleNumberInput(e, "int", "stock") }/>
       </div>
       <div className="flex justify-between">
         <div className="flex gap-5">
-          <button className="bg-gray-300 mt-4 px-4 py-2 rounded-md" onClick={props.salvar}>Salvar</button>
-          <button className="bg-gray-300 mt-4 px-4 py-2 rounded-md" onClick={props.cancelar}>Cancelar</button>
-          <button className="bg-gray-300 mt-4 px-4 py-2 rounded-md" onClick={props.excluir}>Excluir</button>
+          <ActionButton 
+            title="Salvar" 
+            onClick={onCreateProduct} 
+            isLoading={isLoading} 
+            extraStyle="flex flex-row justify-center items-center gap-2 mt-4 px-4"
+          />
+          {/* <ActionButton 
+            title="Excluir" 
+            onClick={() => {}} 
+            extraStyle="flex flex-row justify-center items-center gap-2 mt-4 px-4"
+          /> */}
         </div>
       </div>
-    </div>
+    </>
   )
 }
