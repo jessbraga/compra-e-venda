@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Notification from '../shared/Notification'; 
 
 interface CartSummaryProps {
   total: number;
@@ -13,6 +14,16 @@ export default function CartSummary({
   onToggleSelectAll,
   allSelected,
 }: CartSummaryProps) {
+  const [notificationVisible, setNotificationVisible] = useState(false);
+
+  const handlePurchase = () => {
+    setNotificationVisible(true);
+
+    setTimeout(() => {
+      setNotificationVisible(false);
+    }, 3000);
+  };
+
   return (
     <div className="mt-4 p-4 bg-gray-50 rounded-lg">
       <button
@@ -28,9 +39,16 @@ export default function CartSummary({
       <button
         className="w-full mt-4 border border-black rounded-md hover:bg-black hover:text-white transition-colors"
         disabled={selectedCount === 0}
+        onClick={handlePurchase} 
       >
-        Continue ({selectedCount})
+        Comprar ({selectedCount})
       </button>
+
+      <Notification
+        message="Compra efetuada com sucesso"
+        visible={notificationVisible}
+        onClose={() => setNotificationVisible(false)}
+      />
     </div>
   );
 }

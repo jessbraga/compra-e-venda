@@ -2,56 +2,76 @@ import { useState } from "react";
 import { Product } from "@/core/model/Product";
 import InputTexto from "../shared/InputTexto";
 import ActionButton from "../shared/ActionButton";
-import { usePush } from "@/app/hooks/push"
+import Notification from "../shared/Notification"; // Importa o componente de notificação
+import { usePush } from "@/app/hooks/push";
 
 export default function FormularioProduto() {
-  const [productInfo, setProductInfo] = useState<Partial<Product>>({})
+  const [productInfo, setProductInfo] = useState<Partial<Product>>({});
+  const { loadData, isLoading } = usePush("/products");
 
-  const { loadData, isLoading } = usePush("/products")
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationError, setNotificationError] = useState(false);
 
   const handleNumberInput = (e: React.ChangeEvent<HTMLInputElement>, type: string, field: string) => {
     let parsedNumber = 0;
-    const value = e.target.value
+    const value = e.target.value;
 
     switch (type) {
       case "int":
-        parsedNumber = parseInt(value)
-        break
+        parsedNumber = parseInt(value);
+        break;
       case "float":
-        parsedNumber = parseFloat(value)
-        break
+        parsedNumber = parseFloat(value);
+        break;
     }
 
-    console.log(value)
-
     if (!isNaN(parsedNumber)) {
-      console.log(parsedNumber)
-      setProductInfo({ ...productInfo, [field]: parsedNumber })
+      setProductInfo({ ...productInfo, [field]: parsedNumber });
     } else {
       setProductInfo({ ...productInfo, [field]: '' });
     }
   };
 
   const onCreateProduct = async () => {
-    const response: any = await loadData(productInfo)
+    const response: any = await loadData(productInfo);
     if (!response.error) {
-      window.alert("Produto cadastrado com sucesso")
-      location.reload()
+      setNotificationMessage("Produto cadastrado com sucesso");
+      setNotificationError(false);
+      setNotificationVisible(true);
+      setTimeout(() => setNotificationVisible(false), 3000);
+      setProductInfo({}); 
     } else {
-      window.alert("Falha ao cadastrar produto")
+      setNotificationMessage("Falha ao cadastrar produto");
+      setNotificationError(true);
+      setNotificationVisible(true);
+      setTimeout(() => setNotificationVisible(false), 3000);
     }
-  }
+  };
 
   return (
     <>
       <div className="flex flex-col gap-5">
-        <InputTexto label="Nome" type="text" value={productInfo.name}
+        <InputTexto 
+          label="Nome" 
+          type="text" 
+          value={productInfo.name || ""}
           onChange={(e) => setProductInfo({ ...productInfo, name: e.target.value }) }/>
-        <InputTexto label="Descrição" type="text" value={productInfo.description}
+        <InputTexto 
+          label="Descrição" 
+          type="text" 
+          value={productInfo.description || ""}
           onChange={(e) => setProductInfo({ ...productInfo, description: e.target.value }) }/>
-        <InputTexto label="Valor" type="text" value={productInfo.price}
+        <InputTexto 
+          label="Valor" 
+          type="number" 
+          step="0.01" 
+          value={productInfo.price || ""}
           onChange={(e) => handleNumberInput(e, "float", "price") }/>
-        <InputTexto label="Quantidade" type="text" value={productInfo.stock}
+        <InputTexto 
+          label="Quantidade" 
+          type="text" 
+          value={productInfo.stock || ""}
           onChange={(e) => handleNumberInput(e, "int", "stock") }/>
       </div>
       <div className="flex justify-between">
@@ -62,13 +82,13 @@ export default function FormularioProduto() {
             isLoading={isLoading} 
             extraStyle="flex flex-row justify-center items-center gap-2 mt-4 px-4"
           />
-          {/* <ActionButton 
-            title="Excluir" 
-            onClick={() => {}} 
-            extraStyle="flex flex-row justify-center items-center gap-2 mt-4 px-4"
-          /> */}
         </div>
       </div>
+      <Notification
+        message={notificationMessage}
+        visible={notificationVisible}
+        onClose={() => setNotificationVisible(false)}
+      />
     </>
-  )
+  );
 }
