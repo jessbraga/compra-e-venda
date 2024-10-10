@@ -1,20 +1,40 @@
 import { useState } from 'react';
-import Image from 'next/image'
+import Image from 'next/image';
 import { ShoppingCart } from 'lucide-react';
 import Modal from '../shared/Modal';
 import { Product } from '@/core/model/Product';
 import ActionButton from '../shared/ActionButton';
+import { usePush } from '@/app/hooks/push';
 
 export interface ProductCardProps {
-  product: Product
-  onClick?: (product: Product) => void
-  toBuy?: boolean
+  product: Product;
+  onClick?: (product: Product) => void;
+  toBuy?: boolean;
 }
 
 export default function ProductCard({ product, onClick, toBuy } : ProductCardProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const onHandleModal = () : void => setModalOpen(!modalOpen)
+  const onHandleModal = (): void => setModalOpen(!modalOpen);
+
+  // Hook para adicionar o produto ao carrinho
+  const { loadData: addToCart, isLoading } = usePush(`/cart`, 'POST');
+
+  const handleAddToCart = async () => {
+    const payload = {
+      userId: 1, // O ID do usuário pode ser obtido de um contexto ou estado global
+      productId: product.id,
+      price: product.price,
+      quantity: 1, // Pode ser alterado conforme necessário
+    };
+
+    const response = await addToCart(payload);
+    if (response?.error) {
+      console.error('Erro ao adicionar ao carrinho:', response.error);
+    } else {
+      console.log('Produto adicionado ao carrinho:', response);
+    }
+  };
 
   return (
     <div
@@ -37,13 +57,15 @@ export default function ProductCard({ product, onClick, toBuy } : ProductCardPro
             onClick={onHandleModal} 
             extraStyle="flex items-center justify-center w-full gap-2"
           />
-          {toBuy ??
+          {toBuy ?? (
             <button
               className="flex items-center justify-center p-3 rounded-full border border-black hover:bg-black hover:text-white"
+              onClick={handleAddToCart} 
+              disabled={isLoading} 
             >
-              <ShoppingCart size={18}/>
+              <ShoppingCart size={18} />
             </button>
-          }
+          )}
         </div>
       </div>
       <Modal
@@ -87,5 +109,5 @@ export default function ProductCard({ product, onClick, toBuy } : ProductCardPro
         }
       />
     </div>
-  )
+  );
 }
